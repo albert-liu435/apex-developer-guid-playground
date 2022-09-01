@@ -1,19 +1,23 @@
 /**
- * 
- * 可以通过如下执行方法返回相关的信息
- * ID batchprocessid = Database.executeBatch(new BatchAccountStateful(0),10);
+ * 批处理框架
+ * 1.start()方法执行后，数据便无法修改;
 
-AsyncApexJob aaj = [SELECT Id, Status, JobItemsProcessed, TotalJobItems, NumberOfErrors 
-                    FROM AsyncApexJob WHERE ID =: batchprocessid ];
- * 
- * 
- * 
+2.execute()原则上可以执行多次，比如在调用的时规定执行次数，则按照规定次数执行execute();
+
+3.finish()方法执行以后，批处理类用到的所有的变量对象都会恢复到最开始的状态，即值回滚到最开始状态;
+
+4.如果批处理类不实现Database.Stateful接口，则变量只在相应方法起作用，当方法执行完成，变量则会回滚到初始状态。
+
+eg：在类中声明成员变量A，在start()方法对A进行处理，如果类不实现上述接口，则方法执行完start()方法后A会回滚到初始状态，在execute()方法或者finish()方法调用A时值为最开始声明的值，在start方法的处理结果不保留。
+执行语句如下：
+
+Database.executeBatch(new BatchAccount(0));
  */
+global with sharing class BatchAccount implements Database.Batchable<sObject>{
 
-global with sharing class AsynchronousBatchAccountStateful implements Database.Batchable<sObject>,Database.Stateful{
-     Integer queryCount = 0;
+    Integer queryCount = 0;
     
-    public AsynchronousBatchAccountStateful(Integer queryCount){
+    public BatchAccount(Integer queryCount){
         this.queryCount=queryCount;
     }
 
@@ -31,7 +35,6 @@ global with sharing class AsynchronousBatchAccountStateful implements Database.B
     }
 
     public void finish(Database.BatchableContext BC){
-        //如果不实现Database.Stateful接口，则queryCount为0。因为在execute执行完成便会回滚到初始状态
         System.debug('最终的数据为：'+queryCount);
 
         //完成之后进行邮件发送

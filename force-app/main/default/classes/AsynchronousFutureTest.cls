@@ -7,7 +7,7 @@ public with sharing class AsynchronousFutureTest {
     static testMethod void myUnitTest() {
         Test.startTest();
         List<ID> ids= new ID[]{'0012800000Hz6ozAAB','0012800000Hz6oxAAB'};
-        FutureSample.futuremethod(ids);
+        AsynchronousFuture.futuremethod(ids);
         Test.stopTest();
     }
 

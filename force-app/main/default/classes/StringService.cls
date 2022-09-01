@@ -1,4 +1,3 @@
-
 /**
  * https://developer.salesforce.com/docs/atlas.en-us.238.0.apexref.meta/apexref/apex_methods_system_string.htm#apex_System_String_abbreviate
  */

@@ -2,7 +2,7 @@ public with sharing class AsynchronousQueueableSample implements Queueable{
      
     private List<ID> ids{get;set;}
      
-    public QueueableSample(List<ID> ids) {
+    public AsynchronousQueueableSample(List<ID> ids) {
         this.ids = ids;
     }
      
